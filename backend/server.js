@@ -1,3 +1,4 @@
+/* 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -66,4 +67,42 @@ const server = http.createServer((req, res) => {
 server.listen(9000, "127.0.0.1", () => {
     const addr = server.address();
 		console.log(`http://${addr.address}:${addr.port}`);
-});
+}); */
+
+// End of codecool server
+
+
+
+const http = require('http');
+const path = require('path');
+const port = 9000
+const fs = require('fs');
+
+
+const server = http.createServer(function(request, response) {
+	response.writeHead(200, { 'Content-Type': 'text/html' })
+	let filePath = path.resolve(__dirname + '/../frontend/' + request.url)
+		console.log(request.url);
+		if(request.url === '/') {
+			filePath = filePath + '/index.html'
+		}
+	console.log(filePath);
+
+	fs.readFile(filePath, function(error, data) {
+		if(error) {
+			response.writeHead(404)
+			response.write('Error: File Not Found')
+		} else {
+			response.write(data)
+		}
+		response.end()
+	})
+})
+
+server.listen(port, function(error) {
+	if(error) {
+		console.log('Something went wrong', error)
+	} else {
+		console.log('Server is listening on port ' + port)
+	}
+})
